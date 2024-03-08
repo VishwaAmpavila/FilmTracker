@@ -1,12 +1,13 @@
 import 'package:film_tracker/api/api.dart';
 import 'package:film_tracker/models/movie.dart';
 import 'package:film_tracker/models/tv_show.dart';
+import 'package:film_tracker/screens/search_screen.dart';
+// import 'package:film_tracker/screens/search_screen.dart';
 import 'package:film_tracker/widgets/movie_slider.dart';
 import 'package:film_tracker/widgets/tv_show_slider.dart';
 import 'package:film_tracker/widgets/carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:film_tracker/screens/search_screen.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -45,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => SearchScreen()),
+               Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (context) => SearchScreen()),
               );
             },
           ),
@@ -65,8 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Text('Trending Movies', style: GoogleFonts.oswald(fontSize: 25),
               ),
-
-              const SizedBox(height: 30),
 
               SizedBox(
                 child: FutureBuilder(
