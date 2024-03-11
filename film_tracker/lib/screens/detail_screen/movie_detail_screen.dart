@@ -1,9 +1,11 @@
 import 'package:film_tracker/background_color.dart';
 import 'package:film_tracker/constants.dart';
 import 'package:film_tracker/models/movie.dart';
-import 'package:film_tracker/widgets/back_button.dart';
+import 'package:film_tracker/widgets/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MovieDetailsPage extends StatelessWidget {
  const MovieDetailsPage({
@@ -13,25 +15,28 @@ class MovieDetailsPage extends StatelessWidget {
 
  final Movie film;
 
+  Future<void> _saveMovie(String status) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String key = '${film.id}_$status';
+    if (!prefs.containsKey(key)) {
+      await prefs.setString(key, film.id.toString());
+      print("Saved");
+    } else {
+      print("Already saved");
+    }
+ }
+
  @override
  Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            leading: const BackBtn(),
             backgroundColor: Colours.scaffoldBgColor,
             expandedHeight: 500,
             pinned: true,
             floating: true,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                film.title,
-                style: GoogleFonts.belleza(
-                 fontSize: 17,
-                 fontWeight: FontWeight.w600,
-                ),
-              ),
               background: ClipRRect(
                 borderRadius: const BorderRadius.only(
                  bottomLeft: Radius.circular(24),
@@ -50,23 +55,14 @@ class MovieDetailsPage extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Column(
                 children: [
-                 Text(
-                    'Overview',
-                    style: GoogleFonts.openSans(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w800,
-                    ),
-                 ),
-                 const SizedBox(height: 16),
-                 Text(
-                    film.overview,
-                    style: GoogleFonts.roboto(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w400,
-                    ),
-                 ),
-                 const SizedBox(height: 16),
-                 SizedBox(
+                Text(
+                film.title,
+                style: GoogleFonts.belleza(
+                 fontSize: 17,
+                 fontWeight: FontWeight.w600,
+                ),
+              ),
+                  SizedBox(
                     height: 50,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
@@ -85,7 +81,7 @@ class MovieDetailsPage extends StatelessWidget {
                               ),
                               Text(
                                 '${film.voteAverage.toStringAsFixed(1)}/10',
-                                style: GoogleFonts.roboto(
+                                style: GoogleFonts.poppins(
                                  fontSize: 17,
                                  fontWeight: FontWeight.bold,
                                 ),
@@ -101,7 +97,21 @@ class MovieDetailsPage extends StatelessWidget {
                           ),
                           child: Text(
                             'Release Date: ${film.releaseDate}',
-                            style: GoogleFonts.roboto(
+                            style: GoogleFonts.poppins(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            'Language: ${film.language}',
+                            style: GoogleFonts.poppins(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                             ),
@@ -110,12 +120,47 @@ class MovieDetailsPage extends StatelessWidget {
                       ],
                     ),
                  ),
+                 Text(
+                    'Overview',
+                    style: GoogleFonts.poppins(
+                      fontSize: 30,
+                      fontWeight: FontWeight.w800,
+                    ),
+                 ),
+
+                 const SizedBox(height: 16),
+                 
+                 Text(
+                    film.overview,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w400,
+                      
+                    ),
+                 ),
+
+                const SizedBox(height: 16),
+
+                ElevatedButton(
+                  onPressed: () => _saveMovie('WatchLater'),
+                  child: Text('Watch Later'),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => _saveMovie('Watched'),
+                  child: Text('Watched'),
+                ),
+
+
+                 const SizedBox(height: 16),
                 ],
               ),
             ),
           ),
         ],
       ),
+      bottomNavigationBar: bottomAppBar(context: context),
     );
  }
 }

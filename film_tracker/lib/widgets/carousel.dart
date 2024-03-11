@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:film_tracker/constants.dart';
-import 'package:film_tracker/screens/movie_detail_screen.dart';
+import 'package:film_tracker/screens/detail_screen/movie_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class Carousel extends StatelessWidget {
@@ -20,7 +20,7 @@ class Carousel extends StatelessWidget {
         options: CarouselOptions(
           height: 300,
           autoPlay: true,
-          viewportFraction: 0.55,
+          viewportFraction: 0.45,
           enlargeCenterPage: true,
           pageSnapping: true,
           autoPlayCurve: Curves.fastOutSlowIn,
@@ -43,10 +43,26 @@ class Carousel extends StatelessWidget {
               child: SizedBox(
                 height: 300,
                 width: 200,
-                child: Image.network(
-                  filterQuality: FilterQuality.high,
-                  fit: BoxFit.cover,
-                  '${Constants.imagePath}${snapshot.data[itemIndex].posterPath}',
+                child: Column(
+                 children: [
+                    Expanded(
+                      child: Image.network(
+                        filterQuality: FilterQuality.high,
+                        fit: BoxFit.cover,
+                        '${Constants.imagePath}${snapshot.data[itemIndex].posterPath}',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        snapshot.data[itemIndex].title,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                 ],
                 ),
               ),
             ),

@@ -1,9 +1,7 @@
 import 'package:film_tracker/api/api.dart';
 import 'package:film_tracker/models/movie.dart';
 import 'package:film_tracker/models/tv_show.dart';
-import 'package:film_tracker/screens/search_screen.dart';
-// import 'package:film_tracker/screens/search_screen.dart';
-import 'package:film_tracker/widgets/movie_slider.dart';
+import 'package:film_tracker/widgets/bottom_app_bar.dart';
 import 'package:film_tracker/widgets/tv_show_slider.dart';
 import 'package:film_tracker/widgets/carousel.dart';
 import 'package:flutter/material.dart';
@@ -20,20 +18,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Movie>> trendingMovies;
   late Future<List<TVShow>> airingTVShows;
-  late Future<List<Movie>> upcomingMovies;
 
   @override
   void initState() {
     super.initState();
     trendingMovies = Api().getTrendingMovies();
     airingTVShows = Api().getAiringTVShows();
-    upcomingMovies = Api().getUpcomingMovies();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Image.asset('assets/filmtracker_s_w.png',
@@ -42,17 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
           filterQuality: FilterQuality.high,
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-               Navigator.push(
-                 context,
-                 MaterialPageRoute(builder: (context) => SearchScreen()),
-              );
-            },
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -63,8 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               
               const SizedBox(height: 30),
-
-              Text('Trending Movies', style: GoogleFonts.oswald(fontSize: 25),
+              
+              Center(
+                child:
+                Text('Whats On At The Cinema?', 
+                style: GoogleFonts.poppins(
+                  fontSize: 20),
+                ),
               ),
 
               SizedBox(
@@ -86,7 +77,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
               const SizedBox(height: 30),
 
-              Text('Airing TV Shows', style: GoogleFonts.oswald(fontSize: 25),),
+              Center(
+                child:
+                Text('Whats On TV Tonight?', 
+                style: GoogleFonts.poppins(
+                  fontSize: 20),
+                ),
+              ),
 
               SizedBox(
                 child: FutureBuilder(
@@ -102,35 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
                  },
                 ),
               ),
-
-              const SizedBox(height: 30),
-
-              Text('Upcoming Movies', style: GoogleFonts.oswald(fontSize: 25,),
-              ),
-
-              SizedBox(
-                child: FutureBuilder(
-                  future: upcomingMovies,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text(snapshot.error.toString()),
-                      );
-                    } else if (snapshot.hasData) {
-                      return  MoviesSlider(snapshot: snapshot,);
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
             ],
           ),
         ),
       ),
+      bottomNavigationBar: bottomAppBar(context: context),
     );
   }
 }

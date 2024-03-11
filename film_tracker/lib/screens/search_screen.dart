@@ -1,10 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:film_tracker/models/tv_show.dart';
+import 'package:film_tracker/screens/detail_screen/tv_show_detail_screen.dart';
+import 'package:film_tracker/widgets/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:film_tracker/models/movie.dart';
-import 'package:film_tracker/screens/movie_detail_screen.dart';
+import 'package:film_tracker/screens/detail_screen/movie_detail_screen.dart';
 import 'package:film_tracker/constants.dart';
+
+enum SearchType { movie, tvShow, person }
 
 class SearchScreen extends StatefulWidget {
  const SearchScreen({Key? key}) : super(key: key);
@@ -18,6 +23,7 @@ class _SearchScreenState extends State<SearchScreen> {
  List<dynamic> _searchResults = [];
  bool _isLoading = false;
  Timer? _debounce;
+ SearchType _selectedSearchType = SearchType.movie;
 
  @override
  void dispose() {
@@ -39,14 +45,32 @@ class _SearchScreenState extends State<SearchScreen> {
       _isLoading = true;
     });
 
-    final response = await http.get(Uri.parse(
-        'https://api.themoviedb.org/3/search/movie?api_key=${Constants.apiKey}&query=$query'));
+    String searchURLType;
+    if(_selectedSearchType == SearchType.movie){
+      
+      searchURLType = "search/movie";
+    }else if(_selectedSearchType == SearchType.tvShow){
 
+      searchURLType = "search/tv";
+    }else if(_selectedSearchType == SearchType.person){
+
+      searchURLType = "search/person";
+    }else{
+      return;
+    }
+
+    final response = await http.get(Uri.parse(
+      'https://api.themoviedb.org/3/$searchURLType?api_key=${Constants.apiKey}&query=$query')
+      );
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);
       setState(() {
         _isLoading = false;
-        _searchResults = jsonBody['results'];
+        if (_selectedSearchType == SearchType.person) {
+          _searchResults = jsonBody['results'].expand((person) => person['known_for']).toList();
+        } else {
+          _searchResults = jsonBody['results'];
+        }
       });
     } else {
       setState(() {
@@ -64,50 +88,100 @@ class _SearchScreenState extends State<SearchScreen> {
     });
  }
 
- void _navigateToDetailsScreen(dynamic movie) {
+ void _navigateToMovieDetailsScreen(dynamic media) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MovieDetailsPage(film: Movie.fromJson(movie)),
+        builder: (context) => MovieDetailsPage(film: Movie.fromJson(media)),
       ),
     );
  }
 
- @override
- Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: TextField(
-          controller: _searchController,
-          onChanged: _onSearchTextChanged,
-          decoration: const InputDecoration(
-            hintText: 'Search for a movie...',
-          ),
-        ),
+  void _navigateToTVShowDetailsScreen(dynamic media) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TVShowDetailsPage(tvShow: TVShow.fromJson(media)),
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : _searchResults.isNotEmpty
-              ? ListView.builder(
-                 itemCount: _searchResults.length,
-                 itemBuilder: (context, index) {
-                    final movie = _searchResults[index];
-                    return ListTile(
-                      title: Text(movie['title']),
-                      subtitle: Text(movie['overview']),
-                      leading: Image.network(
-                        'https://image.tmdb.org/t/p/w500${movie['poster_path']}',
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.movie);
-                        },
-                      ),
-                      onTap: () => _navigateToDetailsScreen(movie),
-                    );
-                 },
-                )
-              : const Center(
-                 child: Text('No results found'),
-                ),
     );
  }
+
+@override
+Widget build(BuildContext context) {
+ return Scaffold(
+    appBar: AppBar(
+      title: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _searchController,
+              onChanged: _onSearchTextChanged,
+              decoration: const InputDecoration(
+                hintText: 'Search...',
+              ),
+            ),
+          ),
+          DropdownButton<SearchType>(
+            value: _selectedSearchType,
+            icon: const Icon(Icons.arrow_drop_down),
+            onChanged: (SearchType? newValue) {
+              setState(() {
+                _searchResults.clear();
+                _searchController.clear();
+                _selectedSearchType = newValue!;
+              });
+            },
+            items: SearchType.values.map((SearchType searchType) {
+              return DropdownMenuItem<SearchType>(
+                value: searchType,
+                child: Text(searchType.toString().split('.').last),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    ),
+    body: _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : _searchResults.isNotEmpty
+            ? ListView.builder(
+                itemCount: _searchResults.length,
+                itemBuilder: (context, index) {
+                 final media = _searchResults[index];
+                 if(_selectedSearchType == SearchType.movie || _selectedSearchType == SearchType.person){
+
+                 return ListTile(
+                    title: Text(media['title']),
+                    subtitle: Text(media['overview']),
+                    leading: Image.network(
+                      'https://image.tmdb.org/t/p/w500${media['poster_path']}',
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.movie);
+                      },
+                    ),
+                    onTap: () => _navigateToMovieDetailsScreen(media),
+                 );
+                 }else if(_selectedSearchType == SearchType.tvShow || _selectedSearchType == SearchType.person){
+                  
+                  return ListTile(
+                    title: Text(media['name']),
+                    subtitle: Text(media['overview']),
+                    leading: Image.network(
+                      'https://image.tmdb.org/t/p/w500${media['poster_path']}',
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.tv);
+                      },
+                    ),
+                    onTap: () => _navigateToTVShowDetailsScreen(media),
+                 );
+                 }
+            },
+          )
+        : const Center(
+            child: Text('No results found'),
+          ),
+    bottomNavigationBar: bottomAppBar(context: context),
+ );
+}
+
 }
