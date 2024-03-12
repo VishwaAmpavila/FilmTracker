@@ -14,16 +14,29 @@ class TVShowDetailsPage extends StatelessWidget {
 
  final TVShow tvShow;
 
-  Future<void> _saveTVShow(String status) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String key = '${tvShow.id}_$status';
-    if (!prefs.containsKey(key)) {
+  Future<void> _saveTVShowToWatchLater() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String key = 'TVShow_${tvShow.id}_WatchLater'; // Use a prefix to distinguish TV shows
+  if (!prefs.containsKey(key)) {
       await prefs.setString(key, tvShow.id.toString());
       print("TV Show saved");
-    } else {
+  } else {
       print("TV Show already saved");
-    }
+  }
+  }
+
+ Future<void> _saveTVShowAsWatched() async {
+ SharedPreferences prefs = await SharedPreferences.getInstance();
+ String key = 'TVShow_${tvShow.id}_Watched'; // Use 'Watched' status
+ if (!prefs.containsKey(key)) {
+    await prefs.setString(key, tvShow.id.toString());
+    print("TV Show marked as Watched");
+ } else {
+    print("TV Show already marked as Watched");
  }
+}
+
+
 
  @override
  Widget build(BuildContext context) {
@@ -49,46 +62,42 @@ class TVShowDetailsPage extends StatelessWidget {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                Text(
-                tvShow.name,
-                style: GoogleFonts.belleza(
-                 fontSize: 17,
-                 fontWeight: FontWeight.w600,
-                ),
-              ),
-                  SizedBox(
-                    height: 50,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                    Text(
+                    tvShow.name,
+                    style: GoogleFonts.belleza(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              Text(
-                                '${tvShow.voteAverage.toStringAsFixed(1)}/10',
-                                style: GoogleFonts.roboto(
-                                 fontSize: 17,
-                                 fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        Text(
+                          '${tvShow.voteAverage.toStringAsFixed(1)}/10',
+                          style: GoogleFonts.roboto(
+                           fontSize: 17,
+                           fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Container(
+                      ],
+                    ),
+                  ),
+                  Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
@@ -102,7 +111,7 @@ class TVShowDetailsPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
+                  Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
@@ -116,18 +125,16 @@ class TVShowDetailsPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                 ),
-                
-                 Text(
+                  Text(
                     'Overview',
                     style: GoogleFonts.openSans(
                       fontSize: 30,
                       fontWeight: FontWeight.w800,
                     ),
                  ),
+
                  const SizedBox(height: 16),
+
                  Text(
                     tvShow.overview,
                     textAlign: TextAlign.center,
@@ -137,19 +144,20 @@ class TVShowDetailsPage extends StatelessWidget {
                     ),
                  ),
                   
-                  const SizedBox(height: 16),
+                 const SizedBox(height: 16),
 
                 ElevatedButton(
-                  onPressed: () => _saveTVShow('WatchLater'),
+                  onPressed: () => _saveTVShowToWatchLater(),
                   child: Text('Watch Later'),
                 ),
 
                 const SizedBox(height: 16),
 
                 ElevatedButton(
-                  onPressed: () => _saveTVShow('Watched'),
+                  onPressed: () => _saveTVShowAsWatched(),
                   child: Text('Watched'),
                 ),
+
                 
                  const SizedBox(height: 16),
                 ],

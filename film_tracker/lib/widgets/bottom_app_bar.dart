@@ -1,6 +1,7 @@
 import 'package:film_tracker/screens/home_screen.dart';
 import 'package:film_tracker/screens/search_screen.dart';
 import 'package:film_tracker/screens/watch_later/watchlater_movie_screen.dart';
+import 'package:film_tracker/screens/watched/watched_movie_screen.dart';
 import 'package:flutter/material.dart';
 
 class bottomAppBar extends StatelessWidget {
@@ -45,7 +46,10 @@ class bottomAppBar extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.remove_red_eye),
             onPressed: () {
-              
+              Navigator.push(
+                this.context, 
+                MaterialPageRoute(builder: (context) => WatchedMovieScreen()),
+              );
             },
           ),
         ],

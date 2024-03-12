@@ -15,16 +15,27 @@ class MovieDetailsPage extends StatelessWidget {
 
  final Movie film;
 
-  Future<void> _saveMovie(String status) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String key = '${film.id}_$status';
-    if (!prefs.containsKey(key)) {
+  Future<void> _saveMovieToWatchLater() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String key = 'Movie_${film.id}_WatchLater';
+  if (!prefs.containsKey(key)) {
       await prefs.setString(key, film.id.toString());
-      print("Saved");
-    } else {
-      print("Already saved");
-    }
+      print("Movie saved");
+  } else {
+      print("Movie already saved");
+  }
+  }
+
+ Future<void> _saveMovieAsWatched() async {
+ SharedPreferences prefs = await SharedPreferences.getInstance();
+ String key = 'Movie_${film.id}_Watched';
+ if (!prefs.containsKey(key)) {
+    await prefs.setString(key, film.id.toString());
+    print("Movie marked as Watched");
+ } else {
+    print("Movie already marked as Watched");
  }
+}
 
  @override
  Widget build(BuildContext context) {
@@ -51,45 +62,41 @@ class MovieDetailsPage extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                children: [
-                Text(
-                film.title,
-                style: GoogleFonts.belleza(
-                 fontSize: 17,
-                 fontWeight: FontWeight.w600,
-                ),
-              ),
-                  SizedBox(
-                    height: 50,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    children: [
+                    Text(
+                    film.title,
+                    style: GoogleFonts.belleza(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                              Text(
-                                '${film.voteAverage.toStringAsFixed(1)}/10',
-                                style: GoogleFonts.poppins(
-                                 fontSize: 17,
-                                 fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                        const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        Text(
+                          '${film.voteAverage.toStringAsFixed(1)}/10',
+                          style: GoogleFonts.roboto(
+                           fontSize: 17,
+                           fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Container(
+                      ],
+                    ),
+                  ),
+                  Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
@@ -97,13 +104,13 @@ class MovieDetailsPage extends StatelessWidget {
                           ),
                           child: Text(
                             'Release Date: ${film.releaseDate}',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.roboto(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                        Container(
+                  Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey),
@@ -111,18 +118,15 @@ class MovieDetailsPage extends StatelessWidget {
                           ),
                           child: Text(
                             'Language: ${film.language}',
-                            style: GoogleFonts.poppins(
+                            style: GoogleFonts.roboto(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                 ),
-                 Text(
+                  Text(
                     'Overview',
-                    style: GoogleFonts.poppins(
+                    style: GoogleFonts.openSans(
                       fontSize: 30,
                       fontWeight: FontWeight.w800,
                     ),
@@ -143,15 +147,14 @@ class MovieDetailsPage extends StatelessWidget {
                 const SizedBox(height: 16),
 
                 ElevatedButton(
-                  onPressed: () => _saveMovie('WatchLater'),
+                  onPressed: () => _saveMovieToWatchLater(),
                   child: Text('Watch Later'),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => _saveMovie('Watched'),
+                  onPressed: () => _saveMovieAsWatched(),
                   child: Text('Watched'),
                 ),
-
 
                  const SizedBox(height: 16),
                 ],

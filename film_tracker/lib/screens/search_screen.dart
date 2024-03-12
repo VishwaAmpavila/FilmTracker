@@ -9,7 +9,7 @@ import 'package:film_tracker/models/movie.dart';
 import 'package:film_tracker/screens/detail_screen/movie_detail_screen.dart';
 import 'package:film_tracker/constants.dart';
 
-enum SearchType { movie, tvShow, person }
+enum SearchType { movie, tvShow}
 
 class SearchScreen extends StatefulWidget {
  const SearchScreen({Key? key}) : super(key: key);
@@ -52,10 +52,8 @@ class _SearchScreenState extends State<SearchScreen> {
     }else if(_selectedSearchType == SearchType.tvShow){
 
       searchURLType = "search/tv";
-    }else if(_selectedSearchType == SearchType.person){
-
-      searchURLType = "search/person";
     }else{
+
       return;
     }
 
@@ -66,11 +64,7 @@ class _SearchScreenState extends State<SearchScreen> {
       final jsonBody = json.decode(response.body);
       setState(() {
         _isLoading = false;
-        if (_selectedSearchType == SearchType.person) {
-          _searchResults = jsonBody['results'].expand((person) => person['known_for']).toList();
-        } else {
-          _searchResults = jsonBody['results'];
-        }
+        _searchResults = jsonBody['results'];
       });
     } else {
       setState(() {
@@ -148,7 +142,7 @@ Widget build(BuildContext context) {
                 itemCount: _searchResults.length,
                 itemBuilder: (context, index) {
                  final media = _searchResults[index];
-                 if(_selectedSearchType == SearchType.movie || _selectedSearchType == SearchType.person){
+                 if(_selectedSearchType == SearchType.movie){
 
                  return ListTile(
                     title: Text(media['title']),
@@ -161,7 +155,7 @@ Widget build(BuildContext context) {
                     ),
                     onTap: () => _navigateToMovieDetailsScreen(media),
                  );
-                 }else if(_selectedSearchType == SearchType.tvShow || _selectedSearchType == SearchType.person){
+                 }else if(_selectedSearchType == SearchType.tvShow){
                   
                   return ListTile(
                     title: Text(media['name']),
