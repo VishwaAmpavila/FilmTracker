@@ -1,4 +1,5 @@
 import 'package:film_tracker/screens/home_screen.dart';
+import 'package:film_tracker/screens/profile_screen.dart';
 import 'package:film_tracker/screens/search_screen.dart';
 import 'package:film_tracker/screens/watch_later/watchlater_movie_screen.dart';
 import 'package:film_tracker/screens/watched/watched_movie_screen.dart';
@@ -16,24 +17,17 @@ class bottomAppBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          
           IconButton(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.remove_red_eye_outlined),
             onPressed: () {
               Navigator.push(
-                this.context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
+                this.context, 
+                MaterialPageRoute(builder: (context) => WatchedMovieScreen()),
               );
             },
           ),
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              Navigator.push(
-                this.context,
-                MaterialPageRoute(builder: (context) => SearchScreen()),
-              );
-            },
-          ),
+
           IconButton(
             icon: Icon(Icons.access_time),
             onPressed: () {
@@ -43,15 +37,38 @@ class bottomAppBar extends StatelessWidget {
               );
             },
           ),
+          
           IconButton(
-            icon: Icon(Icons.remove_red_eye),
+            iconSize: 40,
+            icon: Icon(Icons.home),
             onPressed: () {
               Navigator.push(
-                this.context, 
-                MaterialPageRoute(builder: (context) => WatchedMovieScreen()),
+                this.context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
               );
             },
           ),
+
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              Navigator.push(
+                this.context,
+                MaterialPageRoute(builder: (context) => SearchScreen()),
+              );
+            },
+          ),
+          
+          IconButton(
+            icon: Icon(Icons.person_outline),
+            onPressed: () {
+              Navigator.push(
+                this.context,
+                MaterialPageRoute(builder: (context) => ProfileScreen()),
+              );
+            },
+          ),
+
         ],
       ),
     );

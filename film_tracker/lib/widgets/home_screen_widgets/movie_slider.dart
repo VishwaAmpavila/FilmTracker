@@ -2,10 +2,10 @@ import 'package:film_tracker/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // Make sure to add this import for GoogleFonts
 
-import '../screens/detail_screen/tv_show_detail_screen.dart';
+import '../../screens/detail_screen/movie_detail_screen.dart';
 
-class TVShowSlider extends StatelessWidget {
- const TVShowSlider({
+class MovieSlider extends StatelessWidget {
+ const MovieSlider({
     super.key,
     required this.snapshot,
  });
@@ -28,8 +28,8 @@ class TVShowSlider extends StatelessWidget {
                 Navigator.push(
                  context,
                  MaterialPageRoute(
-                    builder: (context) => TVShowDetailsPage(
-                      tvShow: snapshot.data[index],
+                    builder: (context) => MovieDetailsPage(
+                      film: snapshot.data[index],
                     ),
                  ),
                 );
@@ -51,7 +51,7 @@ class TVShowSlider extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          snapshot.data![index].name,
+                          snapshot.data![index].title,
                           style: GoogleFonts.belleza(
                             fontSize: 17,
                             fontWeight: FontWeight.w600,

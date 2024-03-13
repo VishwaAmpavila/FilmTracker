@@ -146,10 +146,17 @@ class MovieDetailsPage extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
+
+
                 ElevatedButton(
                   onPressed: () => _saveMovieToWatchLater(),
                   child: Text('Watch Later'),
                 ),
+
+
+
+
+
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => _saveMovieAsWatched(),

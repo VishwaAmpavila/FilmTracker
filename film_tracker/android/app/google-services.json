@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "558340326169",
-    "project_id": "film-tracker-two",
-    "storage_bucket": "film-tracker-two.appspot.com"
+    "project_number": "386163000740",
+    "project_id": "film-tracker-database",
+    "storage_bucket": "film-tracker-database.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:558340326169:android:6eb95b6eed30e41a2abb88",
+        "mobilesdk_app_id": "1:386163000740:android:26fdc3c678b9e2266f2d31",
         "android_client_info": {
           "package_name": "com.example.film_tracker"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBMiQIItB-Y0aiug3ryDX-m6q9TlEaf2Vc"
+          "current_key": "AIzaSyBJ8K90brEEkspVFTcC-l89bxvFgHnPy_0"
         }
       ],
       "services": {

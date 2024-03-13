@@ -2,9 +2,9 @@ import 'package:film_tracker/api/api.dart';
 import 'package:film_tracker/models/movie.dart';
 import 'package:film_tracker/models/tv_show.dart';
 import 'package:film_tracker/widgets/bottom_app_bar.dart';
-import 'package:film_tracker/widgets/movie_slider.dart';
-import 'package:film_tracker/widgets/tv_show_slider.dart';
-import 'package:film_tracker/widgets/carousel.dart';
+import 'package:film_tracker/widgets/home_screen_widgets/movie_slider.dart';
+import 'package:film_tracker/widgets/home_screen_widgets/tv_show_slider.dart';
+import 'package:film_tracker/widgets/home_screen_widgets/carousel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -111,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Center(
               child: Text(
-                  'What are the best movies this year?',
+                  'Best Movies This Year',
                   style: GoogleFonts.poppins(fontSize: 20),
               ),
               ),
@@ -135,7 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               Center(
               child: Text(
-                  'Highest Grossing Movies This Year',
+                  'Highest Grossing Movies',
                   style: GoogleFonts.poppins(fontSize: 20),
               ),
               ),
