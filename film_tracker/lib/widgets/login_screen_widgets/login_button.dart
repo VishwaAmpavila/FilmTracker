@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class MyButton extends StatelessWidget {
  final Function(BuildContext)? onTap;
 
+// Constructor for MyButton, requires the onTap function
  const MyButton({super.key, required this.onTap});
 
  @override
  Widget build(BuildContext context) {
+  // Returns a GestureDetector that calls the onTap function when tapped
     return GestureDetector(
       onTap: () => onTap!(context),
       child: Container(

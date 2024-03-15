@@ -1,15 +1,18 @@
 import 'package:film_tracker/screens/login_screens/login_screen.dart';
-import 'package:film_tracker/screens/login_screens/sign_up.dart';
 import 'package:film_tracker/widgets/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatelessWidget {
+
+  // Constructor for ProfileScreen
   ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
 
+    // Retrieves the current user from Firebase Authentication
     final User? user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
@@ -36,10 +39,15 @@ class ProfileScreen extends StatelessWidget {
 
               const SizedBox(height: 25),
               
+              // Sign out button
               ElevatedButton(
                 onPressed: () {
                   FirebaseAuth.instance.signOut().then((value) {
+                    SharedPreferences.getInstance().then((prefs) {
+                    prefs.setBool('isLoggedIn', false);// Sets 'isLoggedIn' to false
+                    });
                     print("Logged Out");
+                    // Navigates to the login screen
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => LoginScreen()),
@@ -53,6 +61,7 @@ class ProfileScreen extends StatelessWidget {
           ),
         ),
       ),
+      //bottom app bar
       bottomNavigationBar: bottomAppBar(context: context),
     );
   }

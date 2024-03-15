@@ -5,6 +5,7 @@ class MyTextField extends StatelessWidget {
   final String hintText;
   final bool obscureText;
 
+  // Constructor for MyTextField, requires a controller, hint text, and obscureText
   const MyTextField({
     super.key,
     required this.controller,
@@ -17,8 +18,8 @@ class MyTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
-        controller: controller,
-        obscureText: obscureText,
+        controller: controller,// Controller for the text field
+        obscureText: obscureText,// Obscures the text if obscureText is true
         decoration: InputDecoration(
             enabledBorder: const OutlineInputBorder(
               borderSide: BorderSide(color: Color.fromARGB(255, 255, 255, 255)),

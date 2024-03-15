@@ -1,3 +1,7 @@
+// Movie class represents a movie with its details
+// It includes properties like id, title, backDropPath, overview, posterPath, releaseDate, voteAverage, and language
+// The class also includes a factory constructor fromJson to create a Movie object from a JSON map
+
 class Movie {
   int id;
   String title;

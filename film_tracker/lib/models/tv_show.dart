@@ -1,3 +1,7 @@
+// TVShow class represents a TV show with its details
+// It includes properties like id, name, overview, posterPath, firstAirDate, voteAverage, and language
+// The class also includes a factory constructor fromJson to create a TVShow object from a JSON map
+
 class TVShow {
  int id;
  String name;

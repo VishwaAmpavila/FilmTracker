@@ -18,6 +18,7 @@ class bottomAppBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           
+          //Button for navigating to the Watched Movies screen
           IconButton(
             icon: Icon(Icons.remove_red_eye_outlined),
             onPressed: () {
@@ -28,6 +29,7 @@ class bottomAppBar extends StatelessWidget {
             },
           ),
 
+          //Button for navigating to the Watch Later Movies screen
           IconButton(
             icon: Icon(Icons.access_time),
             onPressed: () {
@@ -37,7 +39,8 @@ class bottomAppBar extends StatelessWidget {
               );
             },
           ),
-          
+
+          //Button for navigating to the Home screen
           IconButton(
             iconSize: 40,
             icon: Icon(Icons.home),
@@ -49,6 +52,7 @@ class bottomAppBar extends StatelessWidget {
             },
           ),
 
+          //Button for navigating to the Search screen.
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
@@ -58,7 +62,8 @@ class bottomAppBar extends StatelessWidget {
               );
             },
           ),
-          
+
+          //Button for navigating to the Profile screen.
           IconButton(
             icon: Icon(Icons.person_outline),
             onPressed: () {

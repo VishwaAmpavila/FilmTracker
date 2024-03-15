@@ -10,14 +10,18 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 class HomeScreen extends StatefulWidget {
+
+  // Constructor for HomeScreen.
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+// Futures for fetching trending movies, airing TV shows, best movies of the year, 
+//highest grossing movies, and children friendly movies
 class _HomeScreenState extends State<HomeScreen> {
-  late Future<List<Movie>> trendingMovies;
+  late Future<List<Movie>> currentlyAiringMovies;
   late Future<List<TVShow>> airingTVShows;
   late Future<List<Movie>> bestMoviesOfTheYear;
   late Future<List<Movie>> getHighestGrossingMovies;
@@ -26,7 +30,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    trendingMovies = Api().getTrendingMovies();
+    // Initializing futures in initState to fetch data when the widget is created
+    currentlyAiringMovies = Api().getCurrentlyAiringMovies();
     airingTVShows = Api().getAiringTVShows();
     bestMoviesOfTheYear = Api().getBestMoviesOfTheYear();
     getHighestGrossingMovies = Api().getHighestGrossingMovies();
@@ -37,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,// Removes the default back button
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Image.asset('assets/filmtracker_s_w.png',
@@ -48,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),// Bouncing effect on scroll
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
@@ -65,9 +70,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
+              // Carousel for trending movies
               SizedBox(
                 child: FutureBuilder(
-                  future: trendingMovies,
+                  future: currentlyAiringMovies,
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       return Center(
@@ -92,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
 
+              // TV show slider for airing TV shows
               SizedBox(
                 child: FutureBuilder(
                  future: airingTVShows,
@@ -116,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ),
 
+              // Movie slider for best movies of the year
               SizedBox(
               child: FutureBuilder<List<Movie>>(
                   future: bestMoviesOfTheYear,
@@ -140,6 +148,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ),
 
+              // Movie slider for highest grossing movies
               SizedBox(
               child: FutureBuilder<List<Movie>>(
                   future: getHighestGrossingMovies,
@@ -164,6 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ),
 
+              // Movie slider for children friendly movies
               SizedBox(
               child: FutureBuilder<List<Movie>>(
                   future: getChildrenMovies,
@@ -185,6 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      //bottom app bar
       bottomNavigationBar: bottomAppBar(context: context),
     );
   }

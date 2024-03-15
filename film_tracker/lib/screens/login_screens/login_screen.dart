@@ -4,6 +4,7 @@ import 'package:film_tracker/widgets/login_screen_widgets/login_button.dart';
 import 'package:film_tracker/widgets/login_screen_widgets/login_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -12,11 +13,14 @@ class LoginScreen extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // sign user in method
-  void signUserIn(BuildContext context) {
+   // method to sign user in using Firebase
+  void logUserIn(BuildContext context) {
     FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text, 
       password: passwordController.text).then((value) {
+        SharedPreferences.getInstance().then((prefs) {
+          prefs.setBool('isLoggedIn', true);
+          });
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
@@ -31,6 +35,7 @@ class LoginScreen extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 0, 0, 1),
       body: SafeArea(
         child: Center(
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -38,7 +43,7 @@ class LoginScreen extends StatelessWidget {
 
               // logo
               const Icon(
-                Icons.movie,
+                Icons.person,
                 size: 100,
               ),
 
@@ -74,7 +79,7 @@ class LoginScreen extends StatelessWidget {
 
               // sign in button
               MyButton(
-                onTap: signUserIn,
+                onTap: logUserIn,
               ),
 
               const SizedBox(height: 50),
@@ -107,6 +112,7 @@ class LoginScreen extends StatelessWidget {
               )
             ],
           ),
+        ),
         ),
       ),
     );

@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:film_tracker/models/movie.dart';
 import 'package:film_tracker/screens/detail_screen/movie_detail_screen.dart';
-import 'package:film_tracker/constants.dart';
+import 'package:film_tracker/constants%20_values.dart';
 
+// Enum to differentiate between movie and TV show searches
 enum SearchType { movie, tvShow}
 
 class SearchScreen extends StatefulWidget {
@@ -19,10 +20,16 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+
+  // Text editing controller for the search field
  final _searchController = TextEditingController();
+ // List to store search results
  List<dynamic> _searchResults = [];
+ // Flag to indicate loading state
  bool _isLoading = false;
+ // Timer for debouncing search input
  Timer? _debounce;
+ // Selected search type
  SearchType _selectedSearchType = SearchType.movie;
 
  @override
@@ -32,6 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
     super.dispose();
  }
 
+// Fetches search results based on the query
  Future<void> _fetchSearchResults(String query) async {
     if (query.isEmpty) {
       setState(() {
@@ -58,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
     }
 
     final response = await http.get(Uri.parse(
-      'https://api.themoviedb.org/3/$searchURLType?api_key=${Constants.apiKey}&query=$query')
+      'https://api.themoviedb.org/3/$searchURLType?api_key=${ConstantValues.apiKey}&query=$query')
       );
     if (response.statusCode == 200) {
       final jsonBody = json.decode(response.body);
@@ -74,6 +82,7 @@ class _SearchScreenState extends State<SearchScreen> {
     }
  }
 
+  // Handles search text changes with a debounce
  void _onSearchTextChanged(String text) {
     if (_debounce?.isActive ?? false) _debounce?.cancel();
 
@@ -82,6 +91,7 @@ class _SearchScreenState extends State<SearchScreen> {
     });
  }
 
+// Navigates to the movie details screen
  void _navigateToMovieDetailsScreen(dynamic media) {
     Navigator.push(
       context,
@@ -91,6 +101,7 @@ class _SearchScreenState extends State<SearchScreen> {
     );
  }
 
+   // Navigates to the TV show details screen
   void _navigateToTVShowDetailsScreen(dynamic media) {
     Navigator.push(
       context,
@@ -153,6 +164,7 @@ Widget build(BuildContext context) {
                         return const Icon(Icons.movie);
                       },
                     ),
+                    // On tap runs _navigateToMovieDetailsScreen function
                     onTap: () => _navigateToMovieDetailsScreen(media),
                  );
                  }else if(_selectedSearchType == SearchType.tvShow){
@@ -166,6 +178,7 @@ Widget build(BuildContext context) {
                         return const Icon(Icons.tv);
                       },
                     ),
+                    // On tap runs _navigateToTVShowDetailsScreen function
                     onTap: () => _navigateToTVShowDetailsScreen(media),
                  );
                  }
@@ -174,6 +187,7 @@ Widget build(BuildContext context) {
         : const Center(
             child: Text('No results found'),
           ),
+    //bottom app bar
     bottomNavigationBar: bottomAppBar(context: context),
  );
 }

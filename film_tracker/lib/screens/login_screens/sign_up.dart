@@ -1,4 +1,4 @@
-import 'package:film_tracker/screens/home_screen.dart';
+import 'package:film_tracker/screens/login_screens/login_screen.dart';
 import 'package:film_tracker/widgets/login_screen_widgets/login_button.dart';
 import 'package:film_tracker/widgets/login_screen_widgets/login_textfield.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,6 +12,7 @@ class SignUpScreen extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
+   // method to sign user up using Firebase
   void signUserUp(BuildContext context) {
 
     FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -21,7 +22,7 @@ class SignUpScreen extends StatelessWidget {
         print("Created New Account");
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => LoginScreen()),
         );
       });
   }
@@ -32,6 +33,7 @@ class SignUpScreen extends StatelessWidget {
       backgroundColor: const Color.fromARGB(255, 0, 0, 1),
       body: SafeArea(
         child: Center(
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -55,15 +57,6 @@ class SignUpScreen extends StatelessWidget {
 
               const SizedBox(height: 25),
 
-              // username textfield
-              MyTextField(
-                controller: usernameController,
-                hintText: 'Username',
-                obscureText: false,
-              ),
-
-              const SizedBox(height: 10),
-
               // email textfield
               MyTextField(
                 controller: emailController,
@@ -82,13 +75,14 @@ class SignUpScreen extends StatelessWidget {
 
               const SizedBox(height: 50),
 
-              // sign in button
+              // sign Up button
               MyButton(
                 onTap: signUserUp,
               ),
 
             ],
           ),
+        ),
         ),
       ),
     );

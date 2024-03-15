@@ -1,4 +1,4 @@
-import 'package:film_tracker/constants.dart';
+import 'package:film_tracker/constants%20_values.dart';
 import 'package:film_tracker/screens/detail_screen/movie_detail_screen.dart';
 import 'package:film_tracker/widgets/bottom_app_bar.dart';
 import 'package:film_tracker/widgets/watch_later_toggle_button.dart';
@@ -11,24 +11,29 @@ import 'package:film_tracker/models/movie.dart';
 
 class WatchLaterMovieScreen extends StatefulWidget {
  @override
+ 
  _WatchLaterMovieScreenState createState() => _WatchLaterMovieScreenState();
 }
 
 class _WatchLaterMovieScreenState extends State<WatchLaterMovieScreen> {
+  // List to store watched Movies
  List<Movie> watchLaterMovies = [];
 
  @override
  void initState() {
    super.initState();
+   // Loads watch later Movies when the widget is initialized
    loadWatchLaterMovies();
  }
 
+  // Loads watch later Movies from shared preferences
   Future<void> loadWatchLaterMovies() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // Filter keys to only include those that start with 'Movie_' and end with '_WatchLater'
   List<String> keys = prefs.getKeys().where((key) => key.startsWith('Movie_') && key.endsWith('_WatchLater')).toList();
   watchLaterMovies = [];
-
+  
+  // Fetches details for each watched Movies
   for (String key in keys) {
         String movieId = prefs.getString(key)!;
         Movie? movie = await fetchMovieDetails(movieId);
@@ -40,9 +45,9 @@ class _WatchLaterMovieScreenState extends State<WatchLaterMovieScreen> {
   }
   }
 
-
+  // Fetches details for a Movies from TMDb
   Future<Movie?> fetchMovieDetails(String movieId) async {
-  final response = await http.get(Uri.parse('https://api.themoviedb.org/3/movie/$movieId?api_key=${Constants.apiKey}'));
+  final response = await http.get(Uri.parse('https://api.themoviedb.org/3/movie/$movieId?api_key=${ConstantValues.apiKey}'));
 
   if (response.statusCode == 200) {
       return Movie.fromJson(jsonDecode(response.body));
@@ -53,7 +58,7 @@ class _WatchLaterMovieScreenState extends State<WatchLaterMovieScreen> {
   }
   }
 
-
+  // Removes a Movie from the watched list
   Future<void> removeFromWatchLater(String movieId) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // Filter keys to only include those that end with '_WatchLater'
@@ -65,6 +70,7 @@ class _WatchLaterMovieScreenState extends State<WatchLaterMovieScreen> {
       }
   }
   setState(() {
+    // Removes the Movies from the watch later movies list
       watchLaterMovies.removeWhere((movie) => movie.id == int.parse(movieId));
   });
   }
@@ -101,6 +107,7 @@ Widget build(BuildContext context) {
                               if (movie != null) {
                                 Navigator.push(
                                  context,
+                                 // Navigates to the Movie details page
                                  MaterialPageRoute(
                                     builder: (context) => MovieDetailsPage(film: movie),
                                  ),
@@ -111,14 +118,14 @@ Widget build(BuildContext context) {
                                 );
                               }
                             },
-                            child: Text(movie?.title ?? 'Failed to load movie details'),
+                            child: Text(movie?.title ?? 'Failed to load movie details'),// Displays the Movie Title
                           ),
                         ),
                       ],
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () => removeFromWatchLater(watchLaterMovies[index].id.toString()),
+                      onPressed: () => removeFromWatchLater(watchLaterMovies[index].id.toString()),// Removes the Movies from the watch later list
                     ),
                  ),
                  Divider(height: 1, color: Colors.grey),
@@ -132,8 +139,8 @@ Widget build(BuildContext context) {
     bottomNavigationBar: Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        WatchLaterToggle(),
-        bottomAppBar(context: context),
+        WatchLaterToggle(),// Watched toggle button
+        bottomAppBar(context: context),// bottom app bar
       ],
     ),
  );

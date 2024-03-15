@@ -1,4 +1,4 @@
-import 'package:film_tracker/constants.dart';
+import 'package:film_tracker/constants%20_values.dart';
 import 'package:film_tracker/screens/detail_screen/tv_show_detail_screen.dart';
 import 'package:film_tracker/widgets/bottom_app_bar.dart';
 import 'package:film_tracker/widgets/watched_toggle_button.dart';
@@ -10,23 +10,31 @@ import 'package:film_tracker/models/tv_show.dart';
 
 class WatchedTvShowScreen extends StatefulWidget {
  @override
+
+ // Constructor for WatchedTvShowScreen
  _WatchedTvShowScreenState createState() => _WatchedTvShowScreenState();
 }
 
 class _WatchedTvShowScreenState extends State<WatchedTvShowScreen> {
+
+  // List to store watched TV shows
  List<TVShow> watchedTvShows = [];
 
  @override
  void initState() {
    super.initState();
+   // Loads watched TV shows when the widget is initialized
    loadWatchedTvShows();
  }
 
+  // Loads watched TV shows from shared preferences
  Future<void> loadWatchedTvShows() async {
  SharedPreferences prefs = await SharedPreferences.getInstance();
+ // Filters keys to get only those related to watched TV shows
  List<String> keys = prefs.getKeys().where((key) => key.startsWith('TVShow_') && key.endsWith('_Watched')).toList();
  watchedTvShows = [];
 
+  // Fetches details for each watched TV show
  for (String key in keys) {
       String tvShowId = prefs.getString(key)!;
       TVShow? tvShow = await fetchTvShowDetails(tvShowId);
@@ -38,8 +46,9 @@ class _WatchedTvShowScreenState extends State<WatchedTvShowScreen> {
  }
 }
 
+  // Fetches details for a TV show from TMDb
  Future<TVShow?> fetchTvShowDetails(String tvShowId) async {
- final response = await http.get(Uri.parse('https://api.themoviedb.org/3/tv/$tvShowId?api_key=${Constants.apiKey}'));
+ final response = await http.get(Uri.parse('https://api.themoviedb.org/3/tv/$tvShowId?api_key=${ConstantValues.apiKey}'));
 
  if (response.statusCode == 200) {
       return TVShow.fromJson(jsonDecode(response.body));
@@ -49,8 +58,10 @@ class _WatchedTvShowScreenState extends State<WatchedTvShowScreen> {
  }
 }
 
+  // Removes a TV show from the watched list
  Future<void> removeFromWatched(String tvShowId) async {
  SharedPreferences prefs = await SharedPreferences.getInstance();
+ // Filters keys to get only those related to watched TV shows
  List<String> keys = prefs.getKeys().where((key) => key.endsWith('_Watched')).toList();
  for (String key in keys) {
     if (prefs.getString(key) == tvShowId) {
@@ -59,6 +70,7 @@ class _WatchedTvShowScreenState extends State<WatchedTvShowScreen> {
     }
  }
  setState(() {
+    // Removes the TV show from the watched TV Shows list
     watchedTvShows.removeWhere((tvShow) => tvShow.id == int.parse(tvShowId));
  });
 }
@@ -67,7 +79,7 @@ class _WatchedTvShowScreenState extends State<WatchedTvShowScreen> {
  Widget build(BuildContext context) {
    return Scaffold(
      appBar: AppBar(
-       title: Text('Watch Later (TV Shows)'),
+       title: Text('Watched (TV Shows)'),
      ),
      body: Column(
        children: [
@@ -91,27 +103,22 @@ class _WatchedTvShowScreenState extends State<WatchedTvShowScreen> {
                          Expanded(
                            child: GestureDetector(
                              onTap: () {
-                               if (tvShow != null) {
-                                 Navigator.push(
-                                   context,
-                                   MaterialPageRoute(
-                                     builder: (context) => TVShowDetailsPage(tvShow: tvShow),
-                                   ),
-                                 );
-                               } else {
-                                 ScaffoldMessenger.of(context).showSnackBar(
-                                   SnackBar(content: Text('Failed to load TV show details')),
-                                 );
-                               }
-                             },
-                             child: Text(tvShow?.name ?? 'Failed to load TV show details'),
+                               Navigator.push(
+                                 context,
+                                 // Navigates to the TV show details page
+                                 MaterialPageRoute(
+                                   builder: (context) => TVShowDetailsPage(tvShow: tvShow),
+                                 ),
+                               );
+                              },
+                             child: Text(tvShow?.name ?? 'Failed to load TV show details'),// Displays the TV show name
                            ),
                          ),
                        ],
                      ),
                      trailing: IconButton(
                        icon: Icon(Icons.delete),
-                       onPressed: () => removeFromWatched(watchedTvShows[index].id.toString()),
+                       onPressed: () => removeFromWatched(watchedTvShows[index].id.toString()),// Removes the TV show from the watched list
                      ),
                    ),
                    Divider(height: 1, color: Colors.grey),
@@ -125,8 +132,8 @@ class _WatchedTvShowScreenState extends State<WatchedTvShowScreen> {
         bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-         WatchedToggle(),
-         bottomAppBar(context: context),
+         WatchedToggle(),// Watched toggle button
+         bottomAppBar(context: context),// bottom app bar
        ],
      ),
    );

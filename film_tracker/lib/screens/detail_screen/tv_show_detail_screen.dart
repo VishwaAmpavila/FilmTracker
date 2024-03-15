@@ -1,5 +1,5 @@
 import 'package:film_tracker/background_color.dart';
-import 'package:film_tracker/constants.dart';
+import 'package:film_tracker/constants%20_values.dart';
 import 'package:film_tracker/models/tv_show.dart';
 import 'package:film_tracker/widgets/bottom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +12,13 @@ class TVShowDetailsPage extends StatelessWidget {
     required this.tvShow,
  }) : super(key: key);
 
+// TV show object
  final TVShow tvShow;
 
+  // Saves the TV show to the watch later list.
   Future<void> _saveTVShowToWatchLater() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String key = 'TVShow_${tvShow.id}_WatchLater'; // Use a prefix to distinguish TV shows
+  String key = 'TVShow_${tvShow.id}_WatchLater'; // Unique key for the TV show
   if (!prefs.containsKey(key)) {
       await prefs.setString(key, tvShow.id.toString());
       print("TV Show saved");
@@ -25,9 +27,10 @@ class TVShowDetailsPage extends StatelessWidget {
   }
   }
 
+  // Saves the TV show as watched.
  Future<void> _saveTVShowAsWatched() async {
  SharedPreferences prefs = await SharedPreferences.getInstance();
- String key = 'TVShow_${tvShow.id}_Watched'; // Use 'Watched' status
+ String key = 'TVShow_${tvShow.id}_Watched'; // Unique key for the watched TV show.
  if (!prefs.containsKey(key)) {
     await prefs.setString(key, tvShow.id.toString());
     print("TV Show marked as Watched");
@@ -44,7 +47,7 @@ class TVShowDetailsPage extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: Colours.scaffoldBgColor,
+            backgroundColor: Colours.scaffoldBgColor,// Background color of the app bar
             expandedHeight: 500,
             pinned: true,
             floating: true,
@@ -55,8 +58,8 @@ class TVShowDetailsPage extends StatelessWidget {
                  bottomRight: Radius.circular(24),
                 ),
                 child: Image.network(
-                 '${Constants.imagePath}${tvShow.posterPath}',
-                 filterQuality: FilterQuality.high,
+                 '${ConstantValues.imagePath}${tvShow.posterPath}',// Image URL
+                 filterQuality: FilterQuality.high,// High-quality image scaling
                  fit: BoxFit.contain,
                 ),
               ),
@@ -68,7 +71,7 @@ class TVShowDetailsPage extends StatelessWidget {
                   child: Column(
                     children: [
                     Text(
-                    tvShow.name,
+                    tvShow.name,// TV show name
                     style: GoogleFonts.belleza(
                     fontSize: 17,
                     fontWeight: FontWeight.w600,
@@ -84,11 +87,11 @@ class TVShowDetailsPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Icon(
-                          Icons.star,
+                          Icons.star,// Star icon
                           color: Colors.amber,
                         ),
                         Text(
-                          '${tvShow.voteAverage.toStringAsFixed(1)}/10',
+                          '${tvShow.voteAverage.toStringAsFixed(1)}/10',// Vote average
                           style: GoogleFonts.roboto(
                            fontSize: 17,
                            fontWeight: FontWeight.bold,
@@ -104,7 +107,7 @@ class TVShowDetailsPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            'Release Date: ${tvShow.firstAirDate}',
+                            'Release Date: ${tvShow.firstAirDate}',// Release date
                             style: GoogleFonts.roboto(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
@@ -118,7 +121,7 @@ class TVShowDetailsPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Text(
-                            'Language: ${tvShow.language}',
+                            'Language: ${tvShow.language}',// Language
                             style: GoogleFonts.roboto(
                               fontSize: 17,
                               fontWeight: FontWeight.bold,
@@ -147,14 +150,14 @@ class TVShowDetailsPage extends StatelessWidget {
                  const SizedBox(height: 16),
 
                 ElevatedButton(
-                  onPressed: () => _saveTVShowToWatchLater(),
+                  onPressed: () => _saveTVShowToWatchLater(),// Saves the TV show to watch later
                   child: Text('Watch Later'),
                 ),
 
                 const SizedBox(height: 16),
 
                 ElevatedButton(
-                  onPressed: () => _saveTVShowAsWatched(),
+                  onPressed: () => _saveTVShowAsWatched(),// Marks the TV show as watched
                   child: Text('Watched'),
                 ),
 
@@ -166,7 +169,7 @@ class TVShowDetailsPage extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: bottomAppBar(context: context),
+      bottomNavigationBar: bottomAppBar(context: context),// bottom app ba
     );
  }
 }

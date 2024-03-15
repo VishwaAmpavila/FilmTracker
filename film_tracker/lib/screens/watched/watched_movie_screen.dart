@@ -1,4 +1,4 @@
-import 'package:film_tracker/constants.dart';
+import 'package:film_tracker/constants%20_values.dart';
 import 'package:film_tracker/screens/detail_screen/movie_detail_screen.dart';
 import 'package:film_tracker/widgets/bottom_app_bar.dart';
 import 'package:film_tracker/widgets/watched_toggle_button.dart';
@@ -10,24 +10,31 @@ import 'package:film_tracker/models/movie.dart';
 
 class WatchedMovieScreen extends StatefulWidget {
  @override
+
+ // Constructor for WatchedMovieScreen
  _WatchedMovieScreenState createState() => _WatchedMovieScreenState();
 }
 
 class _WatchedMovieScreenState extends State<WatchedMovieScreen> {
+
+  // List to store watched Movies
  List<Movie> watchedMovies = [];
 
  @override
  void initState() {
    super.initState();
+   // Loads watched Movies when the widget is initialized
    loadWatchedMovies();
  }
 
+  // Loads watched Movies from shared preferences
   Future<void> loadWatchedMovies() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // Filter keys to only include those that start with 'Movie_' and end with '_Watched'
   List<String> keys = prefs.getKeys().where((key) => key.startsWith('Movie_') && key.endsWith('_Watched')).toList();
   watchedMovies = [];
 
+  // Fetches details for each watched Movies
   for (String key in keys) {
         String movieId = prefs.getString(key)!;
         Movie? movie = await fetchMovieDetails(movieId);
@@ -39,9 +46,9 @@ class _WatchedMovieScreenState extends State<WatchedMovieScreen> {
   }
   }
 
-
+  // Fetches details for a Movies from TMDb
  Future<Movie?> fetchMovieDetails(String movieId) async {
- final response = await http.get(Uri.parse('https://api.themoviedb.org/3/movie/$movieId?api_key=${Constants.apiKey}'));
+ final response = await http.get(Uri.parse('https://api.themoviedb.org/3/movie/$movieId?api_key=${ConstantValues.apiKey}'));
 
  if (response.statusCode == 200) {
       return Movie.fromJson(jsonDecode(response.body));
@@ -51,6 +58,7 @@ class _WatchedMovieScreenState extends State<WatchedMovieScreen> {
  }
 }
 
+   // Removes a Movie from the watched list
   Future<void> removeFromWatched(String movieId) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   // Filter keys to only include those that end with '_Watched'
@@ -62,6 +70,7 @@ class _WatchedMovieScreenState extends State<WatchedMovieScreen> {
       }
   }
   setState(() {
+    // Removes the Movies from the watched movies list
       watchedMovies.removeWhere((movie) => movie.id == int.parse(movieId));
   });
   }
@@ -71,7 +80,7 @@ class _WatchedMovieScreenState extends State<WatchedMovieScreen> {
 Widget build(BuildContext context) {
  return Scaffold(
     appBar: AppBar(
-      title: Text('Watch Later (Movies)'),
+      title: Text('Watched (Movies)'),
     ),
     body: Column(
       children: [
@@ -98,6 +107,7 @@ Widget build(BuildContext context) {
                               if (movie != null) {
                                 Navigator.push(
                                  context,
+                                 // Navigates to the Movie details page
                                  MaterialPageRoute(
                                     builder: (context) => MovieDetailsPage(film: movie),
                                  ),
@@ -108,14 +118,14 @@ Widget build(BuildContext context) {
                                 );
                               }
                             },
-                            child: Text(movie?.title ?? 'Failed to load movie details'),
+                            child: Text(movie?.title ?? 'Failed to load movie details'),// Displays the Movie Title
                           ),
                         ),
                       ],
                     ),
                     trailing: IconButton(
                       icon: Icon(Icons.delete),
-                      onPressed: () => removeFromWatched(watchedMovies[index].id.toString()),
+                      onPressed: () => removeFromWatched(watchedMovies[index].id.toString()),// Removes the Movies from the watched list
                     ),
                  ),
                  Divider(height: 1, color: Colors.grey),
@@ -129,8 +139,8 @@ Widget build(BuildContext context) {
         bottomNavigationBar: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-         WatchedToggle(),
-         bottomAppBar(context: context),
+         WatchedToggle(),// Watched toggle button
+         bottomAppBar(context: context),// bottom app bar
        ],
      ),
    );
